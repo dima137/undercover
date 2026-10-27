@@ -1,3 +1,6 @@
+import httpx2
+import openai
+import pytest
 from langchain_core.language_models.fake_chat_models import GenericFakeChatModel
 from langchain_core.messages import AIMessage
 
@@ -99,3 +102,32 @@ def test_model_name(monkeypatch):
     assert main.model().model_name == "openai/gpt-6-luna"
     monkeypatch.setenv("MODEL_NAME", "openrouter/free")
     assert main.model().model_name == "openrouter/free"
+
+
+def rate_limited():
+    response = httpx2.Response(429, request=httpx2.Request("POST", "http://openrouter"))
+    return openai.RateLimitError("Rate limit exceeded", response=response, body=None)
+
+
+def test_rate_limit_is_waited_out_and_retried(monkeypatch):
+    waits = []
+    monkeypatch.setattr(main.time, "sleep", waits.append)
+    failures = [rate_limited(), rate_limited()]
+
+    def call():
+        if failures:
+            raise failures.pop()
+        return "answered"
+
+    assert main.retry_rate_limits(call) == "answered"
+    assert waits == [main.RATE_LIMIT_WAIT_SECONDS] * 2
+
+
+def test_rate_limit_that_keeps_coming_is_raised(monkeypatch):
+    monkeypatch.setattr(main.time, "sleep", lambda seconds: None)
+
+    def call():
+        raise rate_limited()
+
+    with pytest.raises(openai.RateLimitError):
+        main.retry_rate_limits(call)

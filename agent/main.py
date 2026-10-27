@@ -2,12 +2,16 @@
 
 import json
 import os
+import time
+from collections.abc import Callable
 from typing import Any, Literal
 from uuid import UUID
 
 import httpx
+import openai
 from dotenv import load_dotenv
 from langchain.agents import create_agent
+from langchain.agents.middleware import ModelRequest, ModelResponse, wrap_model_call
 from langchain_core.callbacks import BaseCallbackHandler
 from langchain_core.language_models import BaseChatModel
 from langchain_core.tools import ToolException, tool
@@ -19,6 +23,8 @@ load_dotenv(override=True)
 BACKEND_URL = "http://localhost:8000"
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 DEFAULT_MODEL = "openai/gpt-6-luna"
+RATE_LIMIT_RETRIES = 5
+RATE_LIMIT_WAIT_SECONDS = 5
 
 
 def backend() -> httpx.Client:
@@ -94,6 +100,25 @@ class StepRecorder(BaseCallbackHandler):
         )
 
 
+def retry_rate_limits[T](call: Callable[[], T]) -> T:
+    """Wait a few seconds and call again each time the rate limit is hit."""
+    for _ in range(RATE_LIMIT_RETRIES):
+        try:
+            return call()
+        except openai.RateLimitError:
+            time.sleep(RATE_LIMIT_WAIT_SECONDS)
+    return call()
+
+
+@wrap_model_call
+def wait_out_rate_limits(
+    request: ModelRequest,
+    handler: Callable[[ModelRequest], ModelResponse],
+) -> ModelResponse:
+    """Retry each model call that hits the rate limit."""
+    return retry_rate_limits(lambda: handler(request))
+
+
 def model() -> ChatOpenAI:
     """Return the model named in MODEL_NAME, or GPT-6 Luna by default."""
     name = os.getenv("MODEL_NAME")
@@ -111,6 +136,7 @@ def run(claim_id: str, thread_id: str, llm: BaseChatModel | None = None) -> str:
         llm or model(),
         tools=TOOLS,
         system_prompt=api("GET", "/api/instructions")["text"],
+        middleware=[wait_out_rate_limits],
     )
     result = agent.invoke(
         {"messages": [{"role": "user", "content": f"Decide claim {claim_id}."}]},

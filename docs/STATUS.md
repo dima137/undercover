@@ -22,6 +22,10 @@ Building the claims pilot from `docs/PLAN.md`, one phase at a time.
 
 - `waiting`, `in_progress`, `waiting_for_sign_off`, then the result: `approved`, `declined` or `docs_missing`. A refer decision is `docs_missing`. This follows the correction in `docs/SPEC.md`, which replaces "decided".
 
+## Rate limits
+
+- When OpenRouter answers with a rate limit, the agent waits 5 seconds and tries that model call again, up to 5 times. The claim keeps its place in the run.
+
 ## Running it
 
 - `npm run check` runs every check.
