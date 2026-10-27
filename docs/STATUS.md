@@ -8,9 +8,10 @@ Building the claims pilot from `docs/PLAN.md`, one phase at a time.
 - Phase 2: the backend records decisions, sign-offs and payments, with the payment gate, and logs the agent's steps. It also lists the handlers. Money is in dollars throughout.
 - Phase 3: the UnderCover Agent, on `create_agent` and OpenRouter. It has three tools, each a backend call: get a claim, get the policy wording, and record a decision. Its instructions come from `backend/instructions.md`. Each tool call is logged to the claim as it happens. The agent has no payment tool.
 
+- Phase 4: the agent runs in the background. `POST /api/claims/{id}/run` starts one claim, and `POST /api/claims/run-queue` works every waiting claim in turn. A run that fails, or ends without a decision, returns its claim to waiting and logs why.
+
 ## Not built yet
 
-- Phase 4: running the queue in the background.
 - Phases 5 and 6: the dashboard, and the end-to-end tests.
 
 ## Running it

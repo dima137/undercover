@@ -81,11 +81,11 @@ Connect the agent to the queue so it works claims from the backend.
 
 Success criteria:
 
-- [ ] `uv run pytest backend agent` passes, with coverage at or above 80%.
-- [ ] Starting a claim returns straight away with state `in_progress`. Polling `GET /api/claims/{id}` shows it move to `decided` or `waiting_for_sign_off`, using the stub model in tests.
-- [ ] Starting a claim that is already `in_progress` returns an error and starts no second run.
-- [ ] A run that fails leaves the claim `waiting` and records the error as a step.
-- [ ] Running the queue with the stub model moves all 25 claims out of `waiting`.
+- [x] `uv run pytest backend agent` passes, with coverage at or above 80%.
+- [x] Starting a claim returns straight away with state `in_progress`. Polling `GET /api/claims/{id}` shows it move to `decided` or `waiting_for_sign_off`, using the stub model in tests.
+- [x] Starting a claim that is already `in_progress` returns an error and starts no second run.
+- [x] A run that fails leaves the claim `waiting` and records the error as a step.
+- [x] Running the queue with the stub model moves all 25 claims out of `waiting`.
 
 ## Phase 5: The dashboard
 

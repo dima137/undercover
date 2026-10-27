@@ -180,6 +180,42 @@ def pay_claim(claim_id: str, amount: float) -> dict[str, Any]:
     return get_claim(claim_id)
 
 
+def waiting_claim_ids() -> list[str]:
+    """Return the ids of the claims waiting to be worked, in order."""
+    with connection() as conn:
+        rows = conn.execute(
+            "SELECT id FROM claims WHERE state = ? ORDER BY id", (WAITING,)
+        ).fetchall()
+    return [row["id"] for row in rows]
+
+
+def start_claim(claim_id: str) -> dict[str, Any]:
+    """Mark a waiting claim as in progress, so the agent can work on it."""
+    with connection() as conn:
+        row = _claim_row(conn, claim_id)
+        if row["state"] != WAITING:
+            raise Conflict(f"Claim {claim_id} is {row['state']}, not waiting")
+        conn.execute(
+            "UPDATE claims SET state = ? WHERE id = ?", (IN_PROGRESS, claim_id)
+        )
+    return get_claim(claim_id)
+
+
+def release(claim_id: str) -> None:
+    """Return a claim the agent left in progress to waiting, and log why."""
+    with connection() as conn:
+        row = _claim_row(conn, claim_id)
+        if row["state"] != IN_PROGRESS:
+            return
+        conn.execute("UPDATE claims SET state = ? WHERE id = ?", (WAITING, claim_id))
+    record_step(
+        claim_id,
+        "run_ended",
+        "",
+        "The run ended without a decision, so the claim is waiting again",
+    )
+
+
 def record_step(claim_id: str, tool: str, step_input: str, output: str) -> None:
     """Add one step to a claim's log of what the agent did."""
     with connection() as conn:

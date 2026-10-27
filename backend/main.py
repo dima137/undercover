@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from backend import db, store
+from backend import db, runner, store
 
 INSTRUCTIONS = Path(__file__).parent / "instructions.md"
 
@@ -73,6 +73,18 @@ def list_claims() -> list[dict[str, Any]]:
 def get_claim(claim_id: str) -> dict[str, Any]:
     """Get one claim in full, with its policy, customer and decision."""
     return store.get_claim(claim_id)
+
+
+@app.post("/api/claims/{claim_id}/run", operation_id="run_claim")
+def run_claim(claim_id: str) -> dict[str, Any]:
+    """Start the agent on a waiting claim, in the background."""
+    return runner.start_claim(claim_id)
+
+
+@app.post("/api/claims/run-queue", operation_id="run_queue")
+def run_queue() -> dict[str, int]:
+    """Start the agent on every waiting claim, one after another, in the background."""
+    return {"queued": runner.start_queue()}
 
 
 @app.post("/api/claims/{claim_id}/decision", operation_id="record_decision")

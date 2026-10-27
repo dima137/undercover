@@ -1,3 +1,5 @@
+import threading
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -10,3 +12,6 @@ def client(tmp_path, monkeypatch):
     monkeypatch.setattr(db, "DB_PATH", tmp_path / "undercover.db")
     with TestClient(app) as test_client:
         yield test_client
+        for thread in threading.enumerate():
+            if thread.name.startswith("run-"):
+                thread.join()
