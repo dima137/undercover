@@ -63,12 +63,12 @@ Build the agent with its tools, on `create_agent` and OpenRouter.
 
 Success criteria:
 
-- [ ] `uv run pytest agent` passes, with coverage at or above 80%, using a stub model. No test calls OpenRouter.
-- [ ] A stub model that approves a claim produces one recorded decision and one step per tool call, in order.
-- [ ] A stub model that tries to pay a $1,250.00 approval does not move money, and the claim stays `waiting_for_sign_off`.
-- [ ] A stub model that calls an unknown tool gets an error and the run ends without a crash.
-- [ ] `MODEL_NAME` overrides the default model. A test confirms this.
-- [ ] Running `uv run python -m agent.main CLM-...` against the live backend with a real key works on one routine claim. This is a manual check for the student, noted in `docs/STATUS.md`.
+- [x] `uv run pytest agent` passes, with coverage at or above 80%, using a stub model. No test calls OpenRouter.
+- [x] A stub model that approves a claim produces one recorded decision and one step per tool call, in order.
+- [x] A stub model that tries to pay a $1,250.00 approval does not move money, and the claim stays `waiting_for_sign_off`.
+- [x] A stub model that calls an unknown tool gets an error and the run ends without a crash.
+- [x] `MODEL_NAME` overrides the default model. A test confirms this.
+- [ ] Running `uv run python -c "from agent.main import run; print(run('CLM-1001', 'live'))"` against the live backend with a real key decides one routine claim. This is a manual check for the student, since it calls OpenRouter and costs API money. It is not run here.
 
 ## Phase 4: Run the queue
 
