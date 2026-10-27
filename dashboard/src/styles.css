@@ -263,8 +263,17 @@ select {
   background: var(--tertiary);
 }
 
-.chip-decided {
+.chip-approved {
   background: var(--primary);
+}
+
+.chip-declined {
+  background: var(--alert);
+  color: #ffffff;
+}
+
+.chip-docs_missing {
+  background: #cdd8db;
 }
 
 .wide {
@@ -273,7 +282,7 @@ select {
 
 @media (min-width: 640px) {
   .counts {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .row {

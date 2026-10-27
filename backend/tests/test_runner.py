@@ -58,10 +58,10 @@ def state(client, claim_id):
     return client.get(f"/api/claims/{claim_id}").json()["state"]
 
 
-def test_a_run_is_in_progress_then_decided(stub_agent):
+def test_a_run_is_in_progress_then_approved(stub_agent):
     started = stub_agent.post("/api/claims/CLM-1001/run")
     assert started.json()["state"] == "in_progress"
-    wait_until(lambda: state(stub_agent, "CLM-1001") == "decided")
+    wait_until(lambda: state(stub_agent, "CLM-1001") == "approved")
     steps = stub_agent.get("/api/claims/CLM-1001").json()["steps"]
     assert [step["tool"] for step in steps] == ["record_decision"]
 
@@ -100,6 +100,6 @@ def test_the_queue_runs_every_waiting_claim(stub_agent):
     wait_until(
         lambda: (
             [claim["state"] for claim in stub_agent.get("/api/claims").json()]
-            == ["decided"] * 25
+            == ["approved"] * 25
         )
     )

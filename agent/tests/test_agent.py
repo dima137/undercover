@@ -45,7 +45,7 @@ def test_run_decides_the_claim_and_logs_each_step(client, monkeypatch):
     ]
     assert main.run("CLM-1001", "t1", StubModel(messages=iter(replies))) == "Approved."
     claim = client.get("/api/claims/CLM-1001").json()
-    assert claim["state"] == "decided"
+    assert claim["state"] == "approved"
     assert claim["payout"] == 420.0
     assert [step["tool"] for step in claim["steps"]] == [
         "get_policy_wording",

@@ -9,7 +9,9 @@ const stateLabels: Record<ClaimState, string> = {
   waiting: "Waiting",
   in_progress: "In progress",
   waiting_for_sign_off: "Waiting for sign-off",
-  decided: "Decided",
+  approved: "Approved",
+  declined: "Declined",
+  docs_missing: "Docs missing",
 };
 
 export function formatDollars(amount: number): string {

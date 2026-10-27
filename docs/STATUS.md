@@ -18,6 +18,10 @@ Building the claims pilot from `docs/PLAN.md`, one phase at a time.
 
 - The live run of the agent against OpenRouter (Phase 3's last criterion). It costs API money, so it is left to the student.
 
+## Claim states
+
+- `waiting`, `in_progress`, `waiting_for_sign_off`, then the result: `approved`, `declined` or `docs_missing`. A refer decision is `docs_missing`. This follows the correction in `docs/SPEC.md`, which replaces "decided".
+
 ## Running it
 
 - `npm run check` runs every check.

@@ -157,7 +157,7 @@ it("signs off a payout with a handler who has the authority", async () => {
 
 it("pays an approved claim and reports a refused payment", async () => {
   const approved = claimDetail({
-    state: "decided",
+    state: "approved",
     decision: "approve",
     payout: 420,
     policy_section: "2",
@@ -190,7 +190,7 @@ it("shows the decision, the steps and the policy and customer", async () => {
     mockFetch({
       "GET /api/claims/CLM-1001": {
         body: claimDetail({
-          state: "decided",
+          state: "approved",
           decision: "approve",
           payout: 420,
           policy_section: "2",

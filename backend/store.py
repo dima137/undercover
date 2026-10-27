@@ -10,7 +10,13 @@ from backend.db import connection
 WAITING = "waiting"
 IN_PROGRESS = "in_progress"
 WAITING_FOR_SIGN_OFF = "waiting_for_sign_off"
-DECIDED = "decided"
+APPROVED = "approved"
+DECLINED = "declined"
+DOCS_MISSING = "docs_missing"
+
+
+# The result of inspecting a claim that needs no sign-off, by the decision made.
+RESULT_STATES = {"approve": APPROVED, "decline": DECLINED, "refer": DOCS_MISSING}
 
 
 class NotFound(Exception):
@@ -125,7 +131,7 @@ def record_decision(
         if row["state"] not in (WAITING, IN_PROGRESS):
             raise Conflict(f"Claim {claim_id} is {row['state']}")
         needs_sign_off = decision == "approve" and payout > _approval_limit(conn)
-        state = WAITING_FOR_SIGN_OFF if needs_sign_off else DECIDED
+        state = WAITING_FOR_SIGN_OFF if needs_sign_off else RESULT_STATES[decision]
         conn.execute(
             """
             UPDATE claims
@@ -150,7 +156,7 @@ def sign_off(claim_id: str, handler_id: str) -> dict[str, Any]:
             raise Conflict(f"{handler['name']} cannot sign off payouts over the limit")
         conn.execute(
             "UPDATE claims SET state = ?, signed_off_by = ? WHERE id = ?",
-            (DECIDED, handler_id, claim_id),
+            (APPROVED, handler_id, claim_id),
         )
     return get_claim(claim_id)
 
@@ -164,8 +170,8 @@ def pay_claim(claim_id: str, amount: float) -> dict[str, Any]:
             raise Conflict(f"Claim {claim_id} is not approved, so it cannot be paid")
         if row["state"] == WAITING_FOR_SIGN_OFF:
             raise Conflict("A payout over the limit needs a handler's sign-off first")
-        if row["state"] != DECIDED:
-            raise Conflict(f"Claim {claim_id} is {row['state']}, not decided")
+        if row["state"] != APPROVED:
+            raise Conflict(f"Claim {claim_id} is {row['state']}, not approved")
         if amount != row["payout"]:
             raise Conflict(f"The approved payout is ${row['payout']:,.2f}")
         paid = conn.execute(

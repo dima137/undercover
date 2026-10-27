@@ -1,5 +1,10 @@
 export type ClaimState =
-  "waiting" | "in_progress" | "waiting_for_sign_off" | "decided";
+  | "waiting"
+  | "in_progress"
+  | "waiting_for_sign_off"
+  | "approved"
+  | "declined"
+  | "docs_missing";
 
 export type Decision = "approve" | "decline" | "refer";
 

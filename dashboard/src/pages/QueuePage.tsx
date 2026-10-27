@@ -8,7 +8,9 @@ const STATES: ClaimState[] = [
   "waiting",
   "in_progress",
   "waiting_for_sign_off",
-  "decided",
+  "approved",
+  "declined",
+  "docs_missing",
 ];
 
 export function QueuePage() {

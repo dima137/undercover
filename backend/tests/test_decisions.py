@@ -32,9 +32,9 @@ def test_approval_needs_a_payout_above_zero(client):
     assert approve(client, payout=0).status_code == 409
 
 
-def test_approval_up_to_the_limit_is_decided(client):
+def test_approval_up_to_the_limit_is_approved(client):
     response = approve(client, payout=1000.00)
-    assert response.json()["state"] == "decided"
+    assert response.json()["state"] == "approved"
     assert response.json()["payout"] == 1000.00
 
 
@@ -44,7 +44,7 @@ def test_approval_over_the_limit_waits_for_sign_off(client):
     assert response.json()["decision"] == "approve"
 
 
-def test_refer_is_decided_with_no_payout(client):
+def test_refer_means_docs_missing(client):
     response = client.post(
         "/api/claims/CLM-1001/decision",
         json={
@@ -54,10 +54,10 @@ def test_refer_is_decided_with_no_payout(client):
             "policy_section": "9",
         },
     )
-    assert response.json()["state"] == "decided"
+    assert response.json()["state"] == "docs_missing"
 
 
-def test_decision_on_a_decided_claim_is_rejected(client):
+def test_decision_on_a_finished_claim_is_rejected(client):
     approve(client)
     assert approve(client).status_code == 409
 
@@ -76,7 +76,7 @@ def test_payment_before_sign_off_is_blocked(client):
 def test_sign_off_then_payment(client):
     approve(client, payout=1250.00)
     signed = client.post("/api/claims/CLM-1001/sign-off", json={"handler_id": "HND-01"})
-    assert signed.json()["state"] == "decided"
+    assert signed.json()["state"] == "approved"
     assert signed.json()["signed_off_by"] == "HND-01"
 
     paid = client.post("/api/claims/CLM-1001/payments", json={"amount": 1250.00})
@@ -110,7 +110,7 @@ def test_payment_of_a_claim_not_approved_is_blocked(client):
     assert response.status_code == 409
 
 
-def test_payment_of_a_claim_not_yet_decided_is_blocked(client):
+def test_payment_of_a_claim_not_yet_approved_is_blocked(client):
     response = client.post("/api/claims/CLM-1001/payments", json={"amount": 420.00})
     assert response.status_code == 409
 

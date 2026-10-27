@@ -43,7 +43,7 @@ test("a signed-off payout can be paid", async ({ page, request }) => {
   await expect(pay).toBeDisabled();
 });
 
-test("a decided claim shows its decision and the agent's steps", async ({
+test("an approved claim shows its decision and the agent's steps", async ({
   page,
   request,
 }) => {
@@ -52,7 +52,7 @@ test("a decided claim shows its decision and the agent's steps", async ({
     data: { tool: "record_decision", input: "{}", output: "ok" },
   });
   await page.goto("/#/claims/CLM-1001");
-  await expect(page.getByText("Decided").first()).toBeVisible();
+  await expect(page.getByText("Approved").first()).toBeVisible();
   await expect(page.getByRole("button", { name: "Pay $420.00" })).toBeEnabled();
   await expect(page.getByText("record_decision")).toBeVisible();
 });

@@ -17,7 +17,7 @@ export function ClaimActions({ detail, handlers, onAction }: Props) {
   const canRun = detail.state === "waiting";
   const canSignOff = detail.state === "waiting_for_sign_off";
   const canPay =
-    detail.state === "decided" &&
+    detail.state === "approved" &&
     detail.decision === "approve" &&
     detail.payments.length === 0;
 
