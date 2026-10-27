@@ -38,18 +38,18 @@ Add the write operations and the rules that protect money.
 - `record_decision(claim_id, decision, payout, reason, policy_section)`: `decision` is `approve`, `decline` or `refer`. Payout is required and must be zero unless the decision is `approve`.
 - A decision over $1,000 moves the claim to `waiting_for_sign_off`. Any other decision moves it to `decided`.
 - `sign_off(claim_id, handler_id)`: a handler signs off a waiting claim, which moves it to `decided`.
-- `pay_claim(claim_id, amount)`: takes the amount in cents. It records a payment only when the claim is `decided`, the amount equals the approved payout, and any payout over $1,000 has a sign-off. Otherwise it returns a clear error and records nothing. There are no real payments.
+- `pay_claim(claim_id, amount)`: takes the amount in dollars. It records a payment only when the claim is `decided`, the amount equals the approved payout, and any payout over $1,000 has a sign-off. Otherwise it returns a clear error and records nothing. There are no real payments.
 - `record_step(claim_id, tool, input, output)`: the step log that the agent writes to.
 
 Success criteria:
 
-- [ ] `uv run pytest backend` passes, with coverage at or above 80%.
-- [ ] A decline with a payout above zero is rejected with an error.
-- [ ] An approve of $1,000.00 or less moves the claim to `decided`. An approve of $1,000.01 moves it to `waiting_for_sign_off`.
-- [ ] `pay_claim` on a $1,250.00 claim before sign-off returns an error and records no payment. A test checks that the claim's payment list is empty.
-- [ ] After `sign_off`, the same `pay_claim` call with `amount` of 125000 cents succeeds and records one payment.
-- [ ] `pay_claim` with an amount different from the approved payout is rejected.
-- [ ] `GET /api/claims/{id}` shows the decision, the reason, the policy section, the payout and the step log.
+- [x] `uv run pytest backend` passes, with coverage at or above 80%.
+- [x] A decline with a payout above zero is rejected with an error.
+- [x] An approve of $1,000.00 or less moves the claim to `decided`. An approve of $1,000.01 moves it to `waiting_for_sign_off`.
+- [x] `pay_claim` on a $1,250.00 claim before sign-off returns an error and records no payment. A test checks that the claim's payment list is empty.
+- [x] After `sign_off`, the same `pay_claim` call with `amount` of 1250.00 succeeds and records one payment.
+- [x] `pay_claim` with an amount different from the approved payout is rejected.
+- [x] `GET /api/claims/{id}` shows the decision, the reason, the policy section, the payout and the step log.
 
 ## Phase 3: The UnderCover Agent
 
