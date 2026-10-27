@@ -24,6 +24,8 @@ Our goal is to handle claims straight through, as accurately as our handlers do.
 - What the agent is doing on a claim while it works, step by step.
 - The agent's instructions, read only.
 
+Correction: instead of "decided" use more descriptive result of inspection: "approved", "declined", or "docs missing" (if additional documents are needed to process the claim).
+
 ## Rules
 
 - A payout over $1,000 needs a handler's sign-off. The agent can approve such a claim, but the payment waits until a handler signs off. The system must block the payment until then, even if the agent tries to pay.
