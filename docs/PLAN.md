@@ -99,12 +99,12 @@ Build the screens for the handlers, following `docs/BRAND.md`.
 
 Success criteria:
 
-- [ ] `npm run check` passes for the dashboard: ESLint, Prettier, tsc, and vitest with coverage at or above 80%. No `any` in the code.
-- [ ] Each state has its own colour, and the queue shows the count of claims in each state.
-- [ ] The claim page shows the decision, reasons, policy section, payout, step log and both buttons. The pay button is disabled until the claim is `decided`.
-- [ ] Playwright MCP: open the queue at a phone width and at a desktop width, with no horizontal scroll and a 16px gutter. Take a screenshot of each.
-- [ ] Playwright MCP: sign off a $1,250.00 claim and then pay it. The payment shows on the page.
-- [ ] Playwright MCP: the instructions page shows the agent's text and has no edit control.
+- [x] `npm run check` passes for the dashboard: ESLint, Prettier, tsc, and vitest with coverage at or above 80%. No `any` in the code.
+- [x] Each state has its own colour, and the queue shows the count of claims in each state.
+- [x] The claim page shows the decision, reasons, policy section, payout, step log and both buttons. The pay button is disabled until the claim is `decided`.
+- [x] Playwright MCP: open the queue at a phone width and at a desktop width, with no horizontal scroll and a 16px gutter. Take a screenshot of each.
+- [x] Playwright MCP: sign off a $1,250.00 claim and then pay it. The payment shows on the page.
+- [x] Playwright MCP: the instructions page shows the agent's text and has no edit control.
 
 ## Phase 6: End-to-end tests, checks and handover
 

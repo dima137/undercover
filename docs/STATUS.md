@@ -10,12 +10,14 @@ Building the claims pilot from `docs/PLAN.md`, one phase at a time.
 
 - Phase 4: the agent runs in the background. `POST /api/claims/{id}/run` starts one claim, and `POST /api/claims/run-queue` works every waiting claim in turn. A run that fails, or ends without a decision, returns its claim to waiting and logs why.
 
+- Phase 5: the dashboard. The queue shows each state with its count and can run the queue. A claim page shows the claim in full, the decision, the payment, the agent's activity, and three actions: run the agent, sign off and pay. Instructions are read only. The screens follow `docs/BRAND.md`, with light and dark colour tokens.
+
 ## Not built yet
 
-- Phases 5 and 6: the dashboard, and the end-to-end tests.
+- Phase 6: the end-to-end tests and the handover.
 
 ## Running it
 
-- `npm run dev` starts the backend and the dashboard.
+- `npm run dev` starts the backend and the dashboard, at http://localhost:5173.
 - The backend rebuilds its database from `data/` each time it starts. The database is `backend/undercover.db`.
 - A live run of the agent calls OpenRouter and costs API money. To try one routine claim, with the backend running: `uv run python -c "from agent.main import run; print(run('CLM-1001', 'live'))"`.
