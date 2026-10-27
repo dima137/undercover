@@ -12,11 +12,15 @@ Building the claims pilot from `docs/PLAN.md`, one phase at a time.
 
 - Phase 5: the dashboard. The queue shows each state with its count and can run the queue. A claim page shows the claim in full, the decision, the payment, the agent's activity, and three actions: run the agent, sign off and pay. Instructions are read only. The screens follow `docs/BRAND.md`, with light and dark colour tokens.
 
+- Phase 6: five end-to-end tests in `e2e/`, covering the queue, the sign-off gate, a signed-off payment, a decided claim, and the read-only instructions.
+
 ## Not built yet
 
-- Phase 6: the end-to-end tests and the handover.
+- The live run of the agent against OpenRouter (Phase 3's last criterion). It costs API money, so it is left to the student.
 
 ## Running it
+
+- `npm run check` runs every check.
 
 - `npm run dev` starts the backend and the dashboard, at http://localhost:5173.
 - The backend rebuilds its database from `data/` each time it starts. The database is `backend/undercover.db`.

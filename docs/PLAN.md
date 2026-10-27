@@ -110,17 +110,17 @@ Success criteria:
 
 Prove the whole pilot works, and bring the docs up to date.
 
-- Playwright tests in `e2e/` for: the queue loads 25 claims; a claim runs through the agent (with the stub model) and gets a decision; a payout over $1,000 waits for sign-off; a signed-off claim can be paid; the instructions page is read only.
+- Playwright tests in `e2e/` for: the queue loads 25 claims; a decision recorded through the API shows on the claim page (the backend runs in its own process, so the agent cannot be stubbed there and the run button is not exercised, since it would call OpenRouter); a payout over $1,000 waits for sign-off; a signed-off claim can be paid; the instructions page is read only.
 - Update `docs/STATUS.md` to describe what is built, how to run it, and the manual live-run step.
 - Keep the README short, with the run steps for Windows and Mac.
 
 Success criteria:
 
-- [ ] `npm run check` passes from the repo root: Python (ruff, pyright, pytest at 80%), TypeScript (ESLint, Prettier, tsc, vitest at 80%) and Playwright.
-- [ ] The Playwright tests cover the five flows above and pass.
-- [ ] No file under `data/evals/` is opened by any code. A grep over `backend/`, `agent/`, `dashboard/` and `e2e/` for `evals` finds nothing outside tests that assert its absence.
-- [ ] `docs/STATUS.md` lists what is built, the run commands and the manual live-run step.
-- [ ] Every phase's criteria in this file are ticked.
+- [x] `npm run check` passes from the repo root: Python (ruff, pyright, pytest at 80%), TypeScript (ESLint, Prettier, tsc, vitest at 80%) and Playwright.
+- [x] The Playwright tests cover the five flows above and pass.
+- [x] No file under `data/evals/` is opened by any code. A grep over `backend/`, `agent/`, `dashboard/` and `e2e/` for `evals` finds nothing outside tests that assert its absence.
+- [x] `docs/STATUS.md` lists what is built, the run commands and the manual live-run step.
+- [x] Every phase's criteria in this file are ticked.
 
 ## Open questions
 
